@@ -1,0 +1,54 @@
+---
+import type { GetStaticPaths } from "astro";
+import BlogLayout from "@/layouts/BlogLayout.astro";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+
+export const getStaticPaths = (async() => {
+    const posts = await getCollection('blog');
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: { post }
+    }))
+}) satisfies GetStaticPaths;
+
+
+const { post } = Astro.props;
+const frontmatter = post.data;
+
+const { Content, headings } = await post.render();
+
+---
+
+<BlogLayout title={frontmatter.title}>
+    <h3 class="text-gray-700 text-xs mb-0">{frontmatter.title}</h3>
+    <h4 class="text-gray-500 text-md mb-0">{frontmatter.author} </h4>
+
+    <Image
+        src={frontmatter.image}
+        alt={`Imagen del post ${frontmatter.title}`}
+        width={600}
+        height={220}
+        class="object-cover w-full h-[300px] rounded-lg my-5"
+        transition:name={`${post.slug}-image`}
+    />
+
+    <h3>Tabla de contenidos</h3>
+    <ol>
+        {
+            headings.map((heading, index) => (
+                <li>
+                    <a href={`#${heading.slug}`}>{index + 1 + ".  " + heading.text}</a>
+                </li>
+            ))
+        }
+    </ol>
+    <Content />
+
+    <div class="mt-20">
+        <a href="#regresar">Ir arriba</a>
+    </div>
+
+</BlogLayout>
+
