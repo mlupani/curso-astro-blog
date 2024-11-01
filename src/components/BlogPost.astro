@@ -26,7 +26,7 @@ const frontmatter = post.data;
     />
 
     <div class="flex flex-col justify-between py-6 lg:mx-6">
-        <a href={post.slug} class="text-xl font-semibold text-gray-800 hover:underline dark:text-white ">
+        <a href={`/blog/${post.slug}`} class="text-xl font-semibold text-gray-800 hover:underline dark:text-white ">
             {frontmatter.description}
         </a>
         <span class="text-sm text-gray-500 dark:text-gray-300">{Formatter.formateDate(frontmatter.date)}</span>
